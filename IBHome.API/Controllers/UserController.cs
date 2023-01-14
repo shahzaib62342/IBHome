@@ -15,44 +15,59 @@ namespace IBHome.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<User> GetAllUsers()
+        public IActionResult GetAllUsers()
         {
-            return _context.Users.ToList();
+            return Ok(_context.Users.ToList());
         }
 
         [HttpGet("{id}")]
-        public User GetUserById(Guid id)
+        public IActionResult GetUserById(Guid id)
         {
-            return _context.Users.Where(x => x.Id == id).FirstOrDefault();
+            return Ok(_context.Users.Where(x => x.Id == id).FirstOrDefault());
         }
 
         [HttpPost()]
-        public void CreateUser([FromBody] User user)
+        public IActionResult CreateUser([FromBody] User user)
         {
                 _context.Users.Add(user);
                 _context.SaveChanges();
+
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         [HttpPut()]
-        public void CreateUser([FromBody] User user,Guid id)
+        public IActionResult CreateUser([FromBody] User user,Guid id)
         {
             var userfromDb = _context.Users.Find(id);
             if (userfromDb != null)
             {
                 _context.Users.Update(user);
                 _context.SaveChanges();
+                return Ok("User Updated");
+            }
+            else
+            {
+                return NotFound();
             }
         }
 
         [HttpDelete("{id}")]
-        public void DeleteUserById(Guid id)
+        public IActionResult DeleteUserById(Guid id)
         {
             var userfromDb= _context.Users.Find(id);   
             if (userfromDb != null)
             {
                 _context.Remove(id);
+                _context.SaveChanges();
+
+                return Ok("User deleted");
+
             }
-            _context.SaveChanges();
+            else
+            {
+                return NotFound();
+            }
+            
           
         }
 
