@@ -1,6 +1,7 @@
 ﻿using IBHome.API.Data;
 using IBHome.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IBHome.API.Controllers
 {
@@ -15,34 +16,34 @@ namespace IBHome.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            return Ok(_context.Users.ToList());
+            return Ok( await _context.Users.ToListAsync());
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserById(Guid id)
+        public async  Task<IActionResult> GetUserById(Guid id)
         {
-            return Ok(_context.Users.Where(x => x.Id == id).FirstOrDefault());
+            return Ok(await _context.Users.Where(x => x.Id == id).FirstOrDefaultAsync());
         }
 
         [HttpPost()]
-        public IActionResult CreateUser([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] User user)
         {
-                _context.Users.Add(user);
-                _context.SaveChanges();
+              await  _context.Users.AddAsync(user);
+              await  _context.SaveChangesAsync();
 
             return StatusCode(StatusCodes.Status201Created);
         }
 
         [HttpPut()]
-        public IActionResult UpdateUser([FromBody] User user,Guid id)
+        public async Task<IActionResult> UpdateUser([FromBody] User user,Guid id)
         {
-            var userfromDb = _context.Users.Find(id);
+            var userfromDb =await _context.Users.FindAsync(id);
             if (userfromDb != null)
             {
                 _context.Users.Update(user);
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
                 return Ok("User Updated");
             }
             else
@@ -52,13 +53,13 @@ namespace IBHome.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUserById(Guid id)
+        public async  Task<IActionResult> DeleteUserById(Guid id)
         {
-            var userfromDb= _context.Users.Find(id);   
+            var userfromDb=await _context.Users.FindAsync(id);   
             if (userfromDb != null)
             {
                 _context.Remove(id);
-                _context.SaveChanges();
+              await  _context.SaveChangesAsync();
 
                 return Ok("User deleted");
 
