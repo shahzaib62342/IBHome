@@ -14,7 +14,7 @@ namespace IBHome.API.Models
         public string PhoneNumber { get; set; }
         public bool IsPhoneNumberConfirmed { get; set; } = false;
         public bool IsEmailConfirmed { get; set; } = false;
-        public UserType UserType { get; set; }
+        public UserType? UserType { get; set; }
         public Guid UserTypeID { get; set; }
         public string SocialType { get; set; } = "Instagram";
         public string SocialUserName { get; set; }

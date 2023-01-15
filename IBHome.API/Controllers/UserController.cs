@@ -36,7 +36,7 @@ namespace IBHome.API.Controllers
         }
 
         [HttpPut()]
-        public IActionResult CreateUser([FromBody] User user,Guid id)
+        public IActionResult UpdateUser([FromBody] User user,Guid id)
         {
             var userfromDb = _context.Users.Find(id);
             if (userfromDb != null)
