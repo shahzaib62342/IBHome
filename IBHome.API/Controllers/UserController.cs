@@ -15,7 +15,7 @@ namespace IBHome.API.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok( await _context.Users.ToListAsync());

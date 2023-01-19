@@ -63,7 +63,6 @@ namespace IBHome.API.Controllers
             {
                 _context.Remove(id);
               await  _context.SaveChangesAsync();
-
                 return Ok("Usertype deleted");
 
             }

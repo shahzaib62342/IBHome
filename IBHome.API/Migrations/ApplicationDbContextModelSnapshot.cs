@@ -136,7 +136,7 @@ namespace IBHome.API.Migrations
 
                     b.HasIndex("UserTypeID");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("IBHome.API.Models.UserType", b =>
@@ -154,7 +154,7 @@ namespace IBHome.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserTypes");
+                    b.ToTable("UserTypes", (string)null);
                 });
 
             modelBuilder.Entity("IBHome.API.Models.User", b =>
