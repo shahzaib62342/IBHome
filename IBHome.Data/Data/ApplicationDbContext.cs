@@ -1,4 +1,4 @@
-﻿using IBHome.API.Models;
+﻿using IBHome.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace IBHome.API.Data

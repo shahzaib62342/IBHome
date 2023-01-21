@@ -1,5 +1,6 @@
-﻿using IBHome.API.Data;
-using IBHome.API.Models;
+﻿
+using IBHome.DataAccess.Data;
+using IBHome.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

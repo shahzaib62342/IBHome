@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace IBHome.API.Migrations
+namespace IBHome.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class AddUsers : Migration

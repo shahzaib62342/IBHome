@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IBHome.API.Models
+namespace IBHome.Models
 {
     public class User
     {
@@ -10,7 +10,7 @@ namespace IBHome.API.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        
+
         public string UserName { get; set; }
         [Required]
         public string Email { get; set; }
@@ -19,7 +19,7 @@ namespace IBHome.API.Models
         public string PhoneNumber { get; set; }
         public bool IsPhoneNumberConfirmed { get; set; } = false;
         public bool IsEmailConfirmed { get; set; } = false;
-        
+
         public UserType? UserType { get; set; }
 
         public Guid UserTypeID { get; set; }

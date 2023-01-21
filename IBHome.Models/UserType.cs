@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IBHome.API.Models
+namespace IBHome.Models
 {
     public class UserType
     {
