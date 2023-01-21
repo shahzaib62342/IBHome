@@ -1,5 +1,6 @@
 ﻿
 using IBHome.DataAccess.Data;
+using IBHome.DataAccess.Infrastructure.IRepository;
 using IBHome.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,41 +13,40 @@ namespace IBHome.API.Controllers
     [ApiController]
     public class UserTypeController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public UserTypeController(ApplicationDbContext context)
+        private readonly IUnitOfWork _unitofwork;
+        public UserTypeController(IUnitOfWork unitofwork)
         {
-            _context = context;
+           _unitofwork= unitofwork;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUserTypes()
+        public  IActionResult GetAllUserTypes()
         {
-            return Ok(await _context.UserTypes.ToListAsync());
+            return Ok( _unitofwork.UserType.GetAll());
         }
 
         [HttpGet("{id}")]
-        public async Task< IActionResult>GetUserTypeById(Guid id)
+        public  IActionResult GetUserTypeById(Guid id)
         {
-            return Ok(await _context.UserTypes.Where(x => x.Id == id).FirstOrDefaultAsync());
+            return Ok(_unitofwork.UserType.GetById(x=>x.Id==id));
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CreateUserType([FromBody] UserType usertype)
+        public IActionResult CreateUserType([FromBody] UserType usertype)
         {
-           await _context.UserTypes.AddAsync(usertype);
-          await  _context.SaveChangesAsync();
-
+            _unitofwork.UserType.Add(usertype);
+            _unitofwork.Save();
             return StatusCode(StatusCodes.Status201Created);
         }
 
         [HttpPut()]
-        public async Task<IActionResult> UpdateUserType([FromBody] UserType usertype, Guid id)
+        public IActionResult UpdateUserType([FromBody] UserType usertype, Guid id)
         {
-            var userfromDb =await _context.UserTypes.FindAsync(id);
+            var userfromDb = _unitofwork.UserType.GetById(x=>x.Id==id);
             if (userfromDb != null)
             {
-                _context.UserTypes.Update(usertype);
-              await  _context.SaveChangesAsync();
+                _unitofwork.UserType.Update(usertype);
+              _unitofwork.Save();
                 return Ok("UserType Updated");
             }
             else
@@ -56,13 +56,13 @@ namespace IBHome.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async  Task<IActionResult> DeleteUserById(Guid id)
+        public IActionResult DeleteUserById(Guid id)
         {
-            var usertypefromDb =await _context.UserTypes.FindAsync(id);
+            var usertypefromDb = _unitofwork.UserType.GetById(x => x.Id == id);
             if (usertypefromDb != null)
             {
-                _context.Remove(id);
-              await  _context.SaveChangesAsync();
+                _unitofwork.UserType.Delete(usertypefromDb);
+                _unitofwork.Save();
                 return Ok("Usertype deleted");
 
             }

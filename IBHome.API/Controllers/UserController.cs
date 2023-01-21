@@ -1,8 +1,9 @@
 ﻿
-using IBHome.DataAccess.Data;
+
+using IBHome.DataAccess.Infrastructure.IRepository;
+using IBHome.DataAccess.Infrastructure.Repository;
 using IBHome.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace IBHome.API.Controllers
 {
@@ -10,41 +11,43 @@ namespace IBHome.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public UserController(ApplicationDbContext context) 
+        private  IUnitOfWork _unitofwork;
+        public UserController(IUnitOfWork  unitofwork) 
         {
-            _context = context;
+            _unitofwork= unitofwork;
         }
 
-        [HttpGet("getall")]
-        public async Task<IActionResult> GetAllUsers()
+        [HttpGet]
+        public  IActionResult GetAllUsers()
         {
-            return Ok( await _context.Users.ToListAsync());
+           
+            return Ok(_unitofwork.User.GetAll());
         }
 
         [HttpGet("{id}")]
-        public async  Task<IActionResult> GetUserById(Guid id)
+        public IActionResult GetUserById(Guid id)
         {
-            return Ok(await _context.Users.Where(x => x.Id == id).FirstOrDefaultAsync());
+            var user=_unitofwork.User.GetById(x=>x.Id==id);
+            return Ok(user);
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CreateUser([FromBody] User user)
+        public  IActionResult CreateUser([FromBody] User user)
         {
-              await  _context.Users.AddAsync(user);
-              await  _context.SaveChangesAsync();
+            _unitofwork.User.Add(user);
+            _unitofwork.Save();
 
             return StatusCode(StatusCodes.Status201Created);
         }
 
         [HttpPut()]
-        public async Task<IActionResult> UpdateUser([FromBody] User user,Guid id)
+        public  IActionResult UpdateUser([FromBody] User user,Guid id)
         {
-            var userfromDb =await _context.Users.FindAsync(id);
+            var userfromDb = _unitofwork.User.GetById(x=>x.Id==id);
             if (userfromDb != null)
             {
-                _context.Users.Update(user);
-               await _context.SaveChangesAsync();
+                 _unitofwork.User.Update(user);
+                _unitofwork.Save();
                 return Ok("User Updated");
             }
             else
@@ -54,13 +57,13 @@ namespace IBHome.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async  Task<IActionResult> DeleteUserById(Guid id)
+        public   IActionResult DeleteUserById(Guid id)
         {
-            var userfromDb=await _context.Users.FindAsync(id);   
+            var userfromDb= _unitofwork.User.GetById(x=>x.Id== id);
             if (userfromDb != null)
             {
-                _context.Remove(id);
-              await  _context.SaveChangesAsync();
+                _unitofwork.User.Delete(userfromDb);
+                _unitofwork.Save();
 
                 return Ok("User deleted");
 
